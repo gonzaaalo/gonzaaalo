@@ -1,4 +1,4 @@
-# 💫 About Me:
+# About Me:
 I’m a software engineer with a passion for new technologies.<br>Contact me on LinkedIn 🧑‍💻
 
 
