@@ -22,6 +22,18 @@ jobs:
             dist/github-snake.svg?color_snake=#57606a
             dist/github-snake-dark.svg?palette=github-dark&color_snake=#e6edf3
 
+      # Keep eaten squares visible as a faded "shadow" instead of emptying them
+      - name: Keep eaten squares visible
+        run: |
+          sudo perl -pi -e 's/\{fill:var\(--(c\d)\)\}([\d.]+%),100%\{fill:var\(--ce\)\}/{fill:var(--$1)}$2,100%{fill:var(--$1);fill-opacity:.45}/g' dist/*.svg
+          grep -q 'fill-opacity:.45' dist/github-snake-dark.svg
+
+      # Drop the progress bar under the grid and trim empty space above/below it
+      - name: Remove progress bar
+        run: |
+          sudo perl -pi -e 's/<rect class="u [^>]*\/>//g; s/viewBox="(\S+) (\S+) (\S+) (\S+)" width="(\S+)" height="(\S+)"/sprintf(q{viewBox="%s %s %s %s" width="%s" height="%s"},$1,$2+12,$3,$4-56,$5,$6-56)/e' dist/*.svg
+          ! grep -q '<rect class="u ' dist/github-snake-dark.svg
+
       - uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: output
